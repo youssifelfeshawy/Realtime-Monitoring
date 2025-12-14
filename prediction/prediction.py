@@ -6,7 +6,7 @@ import numpy as np
 import joblib
 
 # Set the relative path to the 'pickles' directory
-pickle_directory = './pickles'
+pickle_directory = '/CICFlowMeter/prediction/pickles'
 
 # Load the saved components
 scaler = joblib.load(os.path.join(pickle_directory, 'minmax_scaler.pkl'))
@@ -52,7 +52,7 @@ def predict(X_new):
     return predictions
 
 # Folder path to monitor
-folder = '/tmp/pcap/output/'
+folder = '/tmp/captures'
 
 # Ensure the folder exists
 if not os.path.exists(folder):
