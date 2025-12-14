@@ -29,6 +29,6 @@ COPY --from=builder /CICFlowMeter/build/distributions/CICFlowMeter-* .
 # Set working directory - important since relative path is used in the cli "-Djava.library.path=../lib/native"
 WORKDIR /CICFlowMeter/bin
 
-# RUN CICFlowMeter cli to extract features from pcap file or folder of pcap files
-# USAGE: docker run -v /path/to/pcap:/tmp/pcap cicflowmeter /tmp/pcap/input /tmp/pcap/output
-ENTRYPOINT ["./cfm"]
+# RUN CICFlowMeter cli to extract features from a live interface
+# USAGE: docker run --net=host --privileged -v /path/to/output:/tmp/captures cicflowmeter
+ENTRYPOINT ["./cfm", "-live", "/tmp/captures"]

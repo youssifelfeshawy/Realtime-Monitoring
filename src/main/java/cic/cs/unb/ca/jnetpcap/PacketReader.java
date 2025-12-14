@@ -55,7 +55,25 @@ public class PacketReader {
 		this.readIP4 = readip4;
 		this.readIP6 = readip6;
 		this.config(filename);
-	}	
+	}
+
+	public PacketReader(Pcap pcap) {
+		super();
+		this.pcapReader = pcap;
+		this.readIP4 = true;
+		this.readIP6 = false;
+		this.firstPacket = 0L;
+		this.lastPacket = 0L;
+		this.tcp = new Tcp();
+		this.udp = new Udp();
+		this.icmp = new Icmp();
+		this.sctp = new Sctp();
+		this.ipv4 = new Ip4();
+		this.ipv6 = new Ip6();
+		this.l2tp = new L2TP();
+		hdr = new PcapHeader(JMemory.POINTER);
+		buf = new JBuffer(JMemory.POINTER);
+	}
 	
 	private void config(String filename){
         file = filename;

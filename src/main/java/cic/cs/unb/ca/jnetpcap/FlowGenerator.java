@@ -361,4 +361,8 @@ public class FlowGenerator {
         this.finishedFlowCount++;
         return this.finishedFlowCount;
     }
+
+    public void clearCurrentFlows() {
+        currentFlows.clear();
+    }
 }
