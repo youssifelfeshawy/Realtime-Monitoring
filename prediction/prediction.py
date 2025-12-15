@@ -10,6 +10,8 @@ pickle_directory = '/CICFlowMeter/prediction/pickles'
 
 # Load the saved components
 feature_columns = joblib.load(os.path.join(pickle_directory, 'feature_columns.pkl'))
+medians = joblib.load(os.path.join(pickle_directory, 'medians.pkl'))
+skewed_cols = joblib.load(os.path.join(pickle_directory, 'skewed_cols.pkl'))
 scaler = joblib.load(os.path.join(pickle_directory, 'minmax_scaler.pkl'))
 rf_binary = joblib.load(os.path.join(pickle_directory, 'rf_binary_model.pkl'))
 rf_multi = joblib.load(os.path.join(pickle_directory, 'rf_multi_model.pkl'))
@@ -27,9 +29,22 @@ def preprocess_new_data(new_df):
     if extra_cols:
         print(f"Warning: Extra columns in new data will be dropped: {extra_cols}")
     new_df.drop(columns=extra_cols, inplace=True)
-    new_df = new_df[feature_columns] # Reorder to match training
+    new_df = new_df[feature_columns]  # Reorder to match training
     
-    # Normalize
+    # Replace inf with nan
+    new_df.replace([np.inf, -np.inf], np.nan, inplace=True)
+    
+    # Fill NaNs with medians
+    for col, med in medians.items():
+        new_df[col] = new_df[col].fillna(med)
+    
+    # Clip extreme values
+    new_df = new_df.clip(lower=-1e100, upper=1e100)
+    
+    # Log-transform skewed columns
+    new_df[skewed_cols] = np.log1p(new_df[skewed_cols].clip(lower=0))
+    
+    # Normalize/Scale
     new_scaled = pd.DataFrame(scaler.transform(new_df), columns=new_df.columns)
     
     return new_scaled
@@ -80,4 +95,5 @@ try:
             print(f"Error reading/processing CSV: {e}")
 except KeyboardInterrupt:
     print("Stopping monitoring...")
+
 print("Monitoring stopped. Final predictions processed.")
