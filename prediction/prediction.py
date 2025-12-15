@@ -9,11 +9,10 @@ import joblib
 pickle_directory = '/CICFlowMeter/prediction/pickles'
 
 # Load the saved components
+feature_columns = joblib.load(os.path.join(pickle_directory, 'feature_columns.pkl'))
 scaler = joblib.load(os.path.join(pickle_directory, 'minmax_scaler.pkl'))
 rf_binary = joblib.load(os.path.join(pickle_directory, 'rf_binary_model.pkl'))
 rf_multi = joblib.load(os.path.join(pickle_directory, 'rf_multi_model.pkl'))
-le = joblib.load(os.path.join(pickle_directory, 'label_encoder.pkl'))
-feature_columns = joblib.load(os.path.join(pickle_directory, 'feature_columns.pkl'))
 
 def preprocess_new_data(new_df):
     # Handle missing (hyphens/spaces to NaN)
