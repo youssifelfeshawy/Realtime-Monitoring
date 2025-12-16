@@ -86,23 +86,5 @@ The tool can be run in a Docker container to capture live network traffic from a
     *   `--net=host`: Shares the host's network namespace with the container, allowing it to see all network interfaces.
     *   `-v /path/to/your/output:/tmp/captures`: Mounts a host directory into the container's `/tmp/captures` directory to persist the output CSV files.
 
-### Offline PCAP Processing (Docker)
-To use the tool inside a Docker container for processing PCAP files, follow these steps:
-
-1. Set Up Directories:
-     - Create a directory at `/path/to/pcap`.
-     - Inside this directory, make two subfolders: 
-       - `input` (for your input files)
-       - `output` (where the tool will save its results).
-2. Build the image.
-    ```bash
-    docker build -t cicflowmeter .
-    ```
-2. Run the Docker Command:
-    ```bash
-    docker run -v /path/to/pcap:/tmp/pcap cicflowmeter /tmp/pcap/input /tmp/pcap/output
-    ```
-    This command mounts your local /path/to/pcap directory to /tmp/pcap inside the Docker container and then runs the tool on the input, saving results to the output directory.
-
 ### Local
 To run the tool locally, please refer to the [original CICFlowMeter repository](https://github.com/ahlashkari/CICFlowMeter) for instructions.
