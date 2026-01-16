@@ -83,14 +83,27 @@ try:
             for csv in csv_files:
                 full_path = os.path.join(folder, csv)
                 df_new = pd.read_csv(full_path)
+                
                 # Process all rows in the file
                 preprocessed = preprocess_new_data(df_new)
                 preds = predict(preprocessed.values)  # Convert to numpy if needed
+                
+                # Print per-flow predictions
                 for i, pred in enumerate(preds):
                     print(f"Prediction for flow {i + 1} in {csv}: {pred}")
+                
+                # Compute and print majority vote summary
+                if len(preds) > 0:
+                    counts = pd.Series(preds).value_counts()
+                    majority = counts.idxmax()
+                    count_major = counts[majority]
+                    total = len(preds)
+                    percentage = (count_major / total) * 100
+                    print(f"\nOverall prediction for {csv}: {majority} ({percentage:.2f}%)\n")
+                
                 # Delete the file after processing
                 os.remove(full_path)
-                print(f"Processed and deleted: {csv}")
+                print(f"Processed and deleted: {csv}\n")
         except Exception as e:
             print(f"Error reading/processing CSV: {e}")
 except KeyboardInterrupt:
